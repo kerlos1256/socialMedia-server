@@ -1,0 +1,154 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Reactions {
+  id: Float!
+  uuid: String!
+  postsReactions: [PostReaction!]!
+  postsReactionsLength: Float!
+  commentReactions: [CommentReaction!]!
+  commentReactionsLength: Float!
+  user: User!
+  userId: Float!
+}
+
+type PostReaction {
+  id: Float!
+  uuid: String!
+  type: String!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  reaction: Reactions!
+  reactionId: Float!
+  post: Post!
+  postId: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CommentReaction {
+  id: Float!
+  uuid: String!
+  type: String!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  reaction: Reactions!
+  reactionId: Float!
+  comment: Comment!
+  commentId: Float!
+}
+
+type Posts {
+  reqKey: Float!
+  posts: [Post!]!
+}
+
+type Post {
+  reqKey: Float!
+  id: Float!
+  uuid: String!
+  body: String!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  user: User!
+  userId: Float!
+  comments: [Comment!]!
+  commentsLength: Float!
+  reactions: [PostReaction!]!
+  reactionsLength: Float!
+}
+
+type Comment {
+  id: Float!
+  uuid: String!
+  body: String!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  post: Post!
+  postId: Float!
+  user: User!
+  userId: Float!
+  reactions: [CommentReaction!]!
+  reactionsLength: Float!
+}
+
+type User {
+  id: Float!
+  uuid: String!
+  username: String!
+  email: String!
+  bio: String!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  posts: [Post!]!
+  comments: [Comment!]!
+  reactions: Reactions!
+}
+
+type Login {
+  user: User!
+  token: String!
+}
+
+type Query {
+  getUsers: [User!]!
+  findPosts: Posts!
+  getSinglePost(postUuid: String!): Post!
+  findCommentsOfPost(postUuid: String!): [Comment!]!
+  getPostReactions(PostId: Float!): [PostReaction!]!
+  getCommentReactions(CommentId: Float!): [CommentReaction!]!
+}
+
+type Mutation {
+  Register(createUserInput: CreateUserInput!): Login!
+  DeleteUser(id: Float!): User!
+  Login(loginUserInput: LoginUserInput!): Login!
+  createPost(createPostInput: CreatePostInput!): Post!
+  deletePost(postUuid: String!): Post!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  deleteComment(commentUuid: String!): Comment!
+  reactOnPost(PostReactionInput: PostReactionInput!): PostReaction!
+  reactOnComment(CommentReactionInput: CommentReactionInput!): CommentReaction!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+  bio: String
+}
+
+input LoginUserInput {
+  username: String!
+  password: String!
+}
+
+input CreatePostInput {
+  body: String!
+}
+
+input CreateCommentInput {
+  body: String!
+  postId: Float!
+}
+
+input PostReactionInput {
+  postUuid: String!
+  type: String!
+}
+
+input CommentReactionInput {
+  commentUuid: String!
+  type: String!
+}
+
+type Subscription {
+  postAdded: Post!
+  postDeleted: Post!
+  commentAdded(postUuid: String!): Comment!
+  commentDeleted(postUuid: String!): Comment!
+}
